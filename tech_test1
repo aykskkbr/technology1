@@ -1,0 +1,67 @@
+const int potPin = A2;
+const int IN1 = 3;
+const int IN2 = 4;
+
+const int ENA = 9;  // PWM制御で使うENAピンをD9に(モーター1のPWM制御ピン)
+
+
+
+ 
+void setup(){
+ Serial.begin(9600);
+  pinMode(potPin, INPUT);
+  pinMode(IN1, OUTPUT);  // デジタルピンを出力に設定
+  pinMode(IN2, OUTPUT);
+
+  pinMode(ENA, OUTPUT);
+
+  
+
+
+
+}
+
+
+
+
+ 
+void loop(){
+
+
+
+  while(true){
+
+  int val = analogRead(potPin);
+
+  Serial.print(val);
+  Serial.println();
+
+  
+  digitalWrite(IN1,  LOW); // HIGH LOWの組み合わせでモーター回転
+  digitalWrite(IN2, HIGH);  // 2つのモーターを正回転
+  analogWrite(ENA, 150);
+
+    if(val < 5){
+
+      digitalWrite(IN1, LOW); // HIGH LOWの組み合わせでモーター回転
+      digitalWrite(IN2, LOW);  // 2つのモーターを正回転
+      analogWrite(ENA, 150);
+
+      break;
+}
+
+
+  delay(100);
+  digitalWrite(IN1, HIGH ); // HIGH LOWの組み合わせでモーター回転
+  digitalWrite(IN2, LOW);  // 2つのモーターを正回転
+  analogWrite(ENA, 150);
+
+  }
+
+
+}
+
+
+
+
+
