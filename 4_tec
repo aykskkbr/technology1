@@ -1,0 +1,68 @@
+const int potPin = A2;
+const int IN1 = 3;
+const int IN2 = 4;
+
+const int ENA = 9;  // PWM制御で使うENAピンをD9に(モーター1のPWM制御ピン)
+
+int state = 0; // state = 0 L→R , state = 1 R→L 
+
+int count = 0;
+ 
+void setup() {
+ Serial.begin(9600);
+  pinMode(potPin, INPUT);
+  pinMode(IN1, OUTPUT);  // デジタルピンを出力に設定
+  pinMode(IN2, OUTPUT);
+  pinMode(ENA, OUTPUT);
+}
+
+ 
+void loop() {
+  int val = analogRead(potPin);
+
+  Serial.print(val);
+  Serial.println();
+
+  if (state == 0) {
+    if (val == 0) {
+      digitalWrite(IN1, LOW); // 停止
+      digitalWrite(IN2, LOW);  //停止
+      analogWrite(ENA, 150);
+      count += 1;
+      state = 1;
+    }
+    else {
+      digitalWrite(IN1,  LOW); // HIGH LOWの組み合わせでモーター回転
+      digitalWrite(IN2, HIGH);  // 2つのモーターを正回転
+      analogWrite(ENA, 150);
+    }
+  }
+  else if (state == 1) {
+    if (val == 1023 && count < 4) {
+      digitalWrite(IN1, LOW); // 停止
+      digitalWrite(IN2, LOW);  //停止
+      analogWrite(ENA, 150);
+      state = 0;
+    }
+    else if (val == 511 && count == 4) {
+      digitalWrite(IN1, LOW); // 停止
+      digitalWrite(IN2, LOW);  //停止
+      analogWrite(ENA, 150);
+      state = 1;
+      count = 0;
+      
+    }
+    else {
+      digitalWrite(IN1, HIGH ); // HIGH LOWの組み合わせでモーター回転
+      digitalWrite(IN2, LOW);  // 2つのモーターを逆回転
+      analogWrite(ENA, 150);
+    }
+  }
+
+  delay(100);
+}
+
+
+
+
+
